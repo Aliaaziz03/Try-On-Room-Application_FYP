@@ -34,7 +34,7 @@ class _MatcherPageState extends State<MatcherPage> {
 
   final List<ClothingItem> clothingItems = [
     ClothingItem(
-      name: 'Cotton',
+      name: 'Floral',
       imagePath: 'assets/clothes/floral.png',
       availableSizes: ['S', 'M', 'L', 'XL'],
     ),

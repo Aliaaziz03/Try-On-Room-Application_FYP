@@ -348,8 +348,97 @@ ListTile(
         destination = WardrobePage();
         break;
       case 'Find your outfit':
-        destination = MatcherPage();
-        break;
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+          final data = doc.data();
+
+          if (doc.exists &&
+              data != null &&
+              data['height'] != null &&
+              data['hip'] != null &&
+              data['chest'] != null &&
+              data['waist'] != null &&
+              data['height'].toString().isNotEmpty &&
+              data['hip'].toString().isNotEmpty &&
+              data['chest'].toString().isNotEmpty &&
+              data['waist'].toString().isNotEmpty) {
+            destination = AvatarMatcherPage();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MatcherPage()),
+            );
+          } else {
+            showDialog(
+              context: context,
+              builder: (context) => Dialog(
+                backgroundColor: Colors.transparent,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.pinkAccent,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.pinkAccent.withOpacity(0.5),
+                        blurRadius: 20,
+                        spreadRadius: 5,
+                      ),
+                    ],
+                  ),
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Measurements Required!",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      Text(
+                        "You need to fill in your body measurements before accessing the 3D Avatar.",
+                        style: TextStyle(color: Colors.white),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            child: Text("Cancel", style: TextStyle(color: Colors.white)),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                          SizedBox(width: 10),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.pinkAccent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            child: Text("Fill Now"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => MeasurementInputPage()),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+        }
+        return;        
       default:
         destination = Scaffold(body: Center(child: Text('Page not found')));
     }
