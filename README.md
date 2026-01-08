@@ -1,4 +1,4 @@
-# 📱 My Fit Avatar  
+# 📱 Try On Room Application
 ### Mobile-Based Virtual Fitting Room with 3D Avatars & Augmented Reality  
 _Final Year Project (FYP)_
 
